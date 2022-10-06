@@ -1,5 +1,4 @@
 import os
-from threading import Timer
 import msvcrt as m
 
 """ 
