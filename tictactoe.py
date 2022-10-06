@@ -1,9 +1,13 @@
+import os
+from threading import Timer
+import msvcrt as m
+
 """ 
 Método: clearConsole
 Descrição: Limpa o console
 """
 def clearConsole():
-	print("\033[H\033[J", end="")
+	os.system('cls' if os.name=='nt' else 'clear')
 
 """ 
 Método: inicializarTabuleiro
@@ -166,42 +170,55 @@ Método: modoJogador
 Descrição: Função que realiza todas as operações para a opção de usuário-jogador vs. usuário-jogador. Os parâmetros e o retorno devem ser definidos pelo programador
 """
 def playerMode(mode):
-	matches = 0
-	turns = 0
-	score = [0, 0]
-	board = startBoard()
-	printScore(score, mode)
-	printBoard(board)
- 
-	playerWhoStart = 'Jogador 1' if matches % 2 == 0 else 'Jogador 2'
-	playerTurn = playerWhoStart
-	while not 3 in score:
-		clearConsole()
-		printScore(score, mode)
-		printBoard(board)
-		row = collectRow()
-		column = collectColumn()
-		clearConsole()
-		if playerTurn == 'Jogador 1':
-			mark = 'X'
-		else:
-			mark = 'O'
-		if userPlay(row, column, board, mark):
+	while True:
+		matches = 0
+		turns = 0
+		score = [0, 0]
+		board = startBoard()
+	
+		playerWhoStart = 'Jogador 1' if matches % 2 == 0 else 'Jogador 2'
+		playerTurn = playerWhoStart
+		while not 4 in score:
+			clearConsole()
 			printScore(score, mode)
 			printBoard(board)
-			turns += 1
-			playerTurn = 'Jogador 1' if playerTurn == 'Jogador 2' else 'Jogador 2'
-			sequences = buildSequences(board)
-			winner = checkWinner(sequences, mode)
-			if winner == 'Jogador 1':
-				score[0] += 1
-				board = startBoard()
-			elif winner == 'Jogador 2':
-				score[1] += 1
-				board = startBoard()
-			elif turns == 9:
-				board = startBoard()
-	matches += 1
+			if not 3 in score:
+				row = collectRow()
+				column = collectColumn()
+				clearConsole()
+				if playerTurn == 'Jogador 1':
+					mark = 'X'
+				else:
+					mark = 'O'
+				if userPlay(row, column, board, mark):
+					turns += 1
+					playerTurn = 'Jogador 1' if playerTurn == 'Jogador 2' else 'Jogador 2'
+					sequences = buildSequences(board)
+					winner = checkWinner(sequences, mode)
+					if winner == 'Jogador 1':
+						score[0] += 1
+						
+						printBoard(board)
+						print(f'{winner} ganhou!')
+						print('Pressiona para continuar')
+						m.getch()
+						board = startBoard()
+					elif winner == 'Jogador 2':
+						score[1] += 1
+						board = startBoard()
+					elif turns == 9:
+						board = startBoard()
+			else:
+				print(f'O {winner} ganhou!')
+		matches += 1
+
+		while True:
+			op = int(input('Deseja jogar novamente no mesmo modo? 1- Sim | 2 - Não\n'))
+			if op == 1 or op == 2:
+				break
+		if op == 2:
+			break
+
 
 """ 
 Método: jogar
