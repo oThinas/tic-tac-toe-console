@@ -204,6 +204,11 @@ def playerMode(mode):
 						board = startBoard()
 					elif winner == 'Jogador 2':
 						score[1] += 1
+      
+						printBoard(board)
+						print(f'{winner} ganhou!')
+						print('Pressiona para continuar')
+						m.getch()
 						board = startBoard()
 					elif turns == 9:
 						board = startBoard()
